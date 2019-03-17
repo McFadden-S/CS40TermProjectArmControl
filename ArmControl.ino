@@ -1,18 +1,18 @@
 #include <Muscle.h>
 
-const int frequency = 500; // frequency of calls for data in miliseconds
+const int frequency = 50; // frequency of calls for data in miliseconds
 const int valLen = 10;
 
-int PinkieP = 22;
-int RingP = 23;
-int MiddleP = 24;
-int PointerP = 25;
+int PinkieP = 23;
+int RingP = 22;
+int MiddleP = 25;
+int PointerP = 24;
 int ThumbP = 26;
 
-int PinkieA = 31;
-int RingA = 30;
-int MiddleA = 33;
-int PointerA = 32;
+int PinkieA = 30;
+int RingA = 31;
+int MiddleA = 32;
+int PointerA = 33;
 int ThumbA = 35;
 
 int ProMusclePins[] = {PinkieP, RingP, MiddleP, PointerP, ThumbP};
@@ -22,6 +22,9 @@ int AntiMusclePins[] = {PinkieA, RingA, MiddleA, PointerA, ThumbA};
 Muscle AntiMuscles[valLen/2];
 
 void setup() {
+  Serial.begin(9600);
+  delay(200);
+  
   pinSetUp();
   fullValveTest();
 
@@ -39,7 +42,9 @@ void setup() {
 void loop() {
 
 Serial.write('#'); //requests data
-  
+while(Serial.available() == 0){}//end wait for java input
+delay(50);
+
 for (int i = 0; i<valLen/2; i++){
       int input = Serial.read();
       if(input == '1'){
@@ -50,6 +55,7 @@ for (int i = 0; i<valLen/2; i++){
         ProMuscles[i].Release();
         AntiMuscles[i].Hold();
       }//end of else opening
+      Serial.read();
 }//end of for each finger
 
 delay(frequency); //waits set amount of time
